@@ -11,7 +11,7 @@ npm ci
 npm run local
 ```
 
-Open `http://localhost:3100` in your own browser. This starts both servers bound to your computer's loopback interface. In the footer choose **Artist studio**, then **Enter local test studio**. Try uploading a painting, editing your bio, adding writing/chapters, selecting Published, and saving changes. Return to the public pages to see the result. Drafts stay private. Press Ctrl+C in the terminal to stop both servers.
+Open `http://localhost:3210` in your own browser. This starts both servers bound to your computer's loopback interface. In the footer choose **Artist studio**, then **Enter local test studio**. Try uploading a painting, editing your bio, adding writing/chapters, selecting Published, and saving changes. Return to the public pages to see the result. Drafts stay private. Press Ctrl+C in the terminal to stop both servers.
 
 This command does not read `.env`, disables Stripe and Google authentication even if keys are present in your shell, and uses a separate ignored `.local-test` folder for the database and uploads. It does not connect to Railway, Vercel or UltimateTaskManager. Test data persists between starts; remove `.local-test` only if you intentionally want to erase your local test content.
 
