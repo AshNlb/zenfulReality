@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtempSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+process.env.DATA_DIR=mkdtempSync(`${tmpdir()}/zenful-test-`);
+const {read,write,validate,db,EU}=await import('./store.js');
+test('content persists with drafts excluded by default seed status',()=>{const data=read();assert.equal(data.art[0].status,'draft');data.settings.shipping=85;write(validate(data));assert.equal(read().settings.shipping,85)});
+test('invalid prices, duplicate IDs and unsafe links are rejected',()=>{let d=read();d.art[0].price=-1;assert.throws(()=>validate(d));d=read();d.art[1].id=d.art[0].id;assert.throws(()=>validate(d));d=read();d.settings.amazon='javascript:alert(1)';assert.throws(()=>validate(d))});
+test('EU shipping excludes non-EU destinations',()=>{assert.equal(EU.length,27);assert(EU.includes('DK'));assert(!EU.includes('GB'));assert(!EU.includes('NO'))});
+test('only one reservation can exist for an original',()=>{db.prepare('INSERT INTO reservations VALUES(?,?,?)').run('painting','session-a',Date.now()+60000);assert.throws(()=>db.prepare('INSERT INTO reservations VALUES(?,?,?)').run('painting','session-b',Date.now()+60000));assert.equal(db.prepare('SELECT session_id FROM reservations WHERE art_id=?').get('painting').session_id,'session-a')});
